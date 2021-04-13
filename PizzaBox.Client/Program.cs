@@ -4,6 +4,7 @@ using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
 using PizzaBox.Client.Singletons;
 using ExceptionHandlingPizza;
+using System.Linq;
 
 namespace PizzaBox.Client
 {
@@ -48,10 +49,131 @@ namespace PizzaBox.Client
       var ToppingsPrice = getToppingPrice(ToppingChoices);
       DisplayOrder(order.Pizza, crust, size, ToppingChoices);
       DisplayOrderCost(basePizzaPrice, crustPrice, sizePrice, ToppingsPrice);
+      List<string> finalOrder = convertOrder(order.Pizza, crust, size, ToppingChoices);
+      getPreviousOrder(finalOrder);
+      OrderAgain();
+
+      //order.saveOrder(finalOrder);
+
+
 
       //list of toppings
 
       order.Save();
+    }
+
+    private static void OrderAgain()
+    {
+      // ask user with input if they would like order one or more orders 
+      int numberOfOrders = 1;
+      int numberOfOrdersCounter = 1; //since the first order was already taken
+      double orderPriceLimit = 0.00;
+      bool isTrue = true;
+      while (isTrue == true)
+      {
+        System.Console.WriteLine("Would you like to order another pizza? Enter y for yes or n for no");
+        string yesOrNo = System.Console.ReadLine();
+        if (yesOrNo.Equals("y"))
+        {
+          var order = new Order();
+          DisplayStoreMenu();
+          order.Customer = new Customer();
+          order.Store = SelectStore();
+          DisplayPizzaMenu();
+          order.Pizza = SelectPizza();
+          var basePizzaPrice = getPizzaPrice(order.Pizza);
+          var crust = listCrusts();
+          var crustPrice = getCrustPrice(crust);
+          var size = listSizes();
+          var sizePrice = getSizePrice(size);
+          var Toppings = getNumberToppings();
+          List<string> ToppingChoices = getToppingChoice(Toppings);
+          var ToppingsPrice = getToppingPrice(ToppingChoices);
+          DisplayOrder(order.Pizza, crust, size, ToppingChoices);
+          DisplayOrderCost(basePizzaPrice, crustPrice, sizePrice, ToppingsPrice);
+          List<string> finalOrder = convertOrder(order.Pizza, crust, size, ToppingChoices);
+          getPreviousOrder(finalOrder);
+          var finalOrderPrice = getOrderCost(basePizzaPrice, crustPrice, sizePrice, ToppingsPrice);
+          order.Save();
+          numberOfOrdersCounter += 1;
+          numberOfOrders += 1;
+          orderPriceLimit += finalOrderPrice;
+          if (numberOfOrdersCounter >= 50)
+          {
+            isTrue = false;
+          }
+          if (orderPriceLimit >= 250.00)
+          {
+            isTrue = false;
+          }
+        }
+        else if (yesOrNo.Equals("n"))
+        {
+          isTrue = false;
+        }
+        else
+        {
+          System.Console.WriteLine("You did not enter a correct input. Please enter y for yes or n for no for an order");
+        }
+        System.Console.WriteLine($"You ordered {numberOfOrders} pizzas and the total is ${orderPriceLimit}");
+      }
+    }
+
+    private static List<string> convertOrder(APizza pizza, string crust, string size, List<string> toppingList)
+    {
+      List<string> theOrder = new List<string>();
+
+
+      string orderedPizza = pizza.ToString();
+      theOrder.Add(orderedPizza);
+      theOrder.Add(crust);
+      theOrder.Add(size);
+
+      List<string> finalOrder = new List<string>();
+
+      finalOrder.AddRange(theOrder);
+      finalOrder.AddRange(toppingList);
+
+      return finalOrder;
+    }
+    /// <summary>
+    ///  later on will be part of the database retrieval
+    /// </summary>
+    /// <param name="finalOrder"></param>
+    private static void getPreviousOrder(List<string> finalOrder)
+    {
+      // ask user with input if they would like to see their priveous order
+      bool isTrue = false;
+      while (isTrue == false)
+      {
+        System.Console.WriteLine("Would you like to look at your previous order. enter y for yes or n for no");
+        string yesOrNO = Console.ReadLine();
+        if (yesOrNO.Equals("y"))
+        {
+
+          System.Console.WriteLine("Your order was: ");
+          foreach (var orderitem in finalOrder)
+          {
+            System.Console.WriteLine(orderitem);
+          }
+          isTrue = true;
+        }
+        else if (yesOrNO.Equals("n"))
+        {
+          System.Console.WriteLine("Have a nice day.");
+          isTrue = true;
+        }
+        else
+        {
+          System.Console.WriteLine("You did not enter a correct input. Please enter y for yes or n for no for displaying your previous pizza order");
+        }
+      }
+    }
+
+    private static List<APizza> saveOrder(List<string> order)
+    {
+      List<APizza> pizzaOrder = order.Cast<APizza>().ToList();
+      return pizzaOrder;
     }
 
     private static void DisplayOrderCost(double basePizzaPrice, double crustPrice, double sizePrice, double toppingsPrice)
@@ -59,6 +181,13 @@ namespace PizzaBox.Client
       double finalPizzaPrice = basePizzaPrice + crustPrice + sizePrice + toppingsPrice;
       System.Console.WriteLine($"Your order total is : ${finalPizzaPrice}");
     }
+
+    private static double getOrderCost(double basePizzaPrice, double crustPrice, double sizePrice, double toppingsPrice)
+    {
+      double finalPizzaPrice = basePizzaPrice + crustPrice + sizePrice + toppingsPrice;
+      return finalPizzaPrice;
+    }
+
     private static double getPizzaPrice(APizza pizza)
     {
       double pizzaBasePrice = 0.0;
@@ -245,7 +374,7 @@ namespace PizzaBox.Client
       {
         System.Console.WriteLine(e.Message);
         //System.Console.WriteLine("Crust number was not selected. Please choose a crust : 0 soft, 1 cheesy, 2 handtossed, 3 deepdish");
-        listCrusts();
+        return listCrusts();
       }
       return crustChoice;
     }
@@ -324,7 +453,7 @@ namespace PizzaBox.Client
       catch (PizzaSizeException e)
       {
         System.Console.WriteLine(e.Message);
-        listSizes();
+        return listSizes();
       }
 
       return sizeChoice;
