@@ -36,6 +36,7 @@ namespace PizzaBox.Client
 
       order.Customer = new Customer();
       order.Store = SelectStore();
+      DisplayPizzaMenu();
       order.Pizza = SelectPizza();
       var basePizzaPrice = getPizzaPrice(order.Pizza);
       var crust = listCrusts();
@@ -188,7 +189,7 @@ namespace PizzaBox.Client
         SelectStore();
       }
 
-      DisplayPizzaMenu();
+      //DisplayPizzaMenu();
 
       return theStore;
     }
@@ -359,558 +360,226 @@ namespace PizzaBox.Client
 
     public static int getNumberToppings()
     {
-      var toppingTypeNum = " ";
-      var toppingAdds = 0;
+      int toppingAdds;
       System.Console.WriteLine("Enter how many toppings you would like. You can have up to five and no less than two. Enter 2 for two toppings, 3 for three, 4 for four or 5 for five.");
-      toppingTypeNum = Console.ReadLine();
-      if (toppingTypeNum.Equals("2"))
+      string input = Console.ReadLine();
+      bool isTrue = int.TryParse(input, out toppingAdds);
+      if (isTrue)
       {
-        toppingAdds = 2;
-      }
-      else if (toppingTypeNum.Equals("3"))
-      {
-        toppingAdds = 3;
-      }
-      else if (toppingTypeNum.Equals("4"))
-      {
-        toppingAdds = 4;
-      }
-      else if (toppingTypeNum.Equals("5"))
-      {
-        toppingAdds = 5;
+        if (toppingAdds <= 2)
+        {
+          System.Console.WriteLine("you chose either 2 or less toppings. Defaulted to 2 toppings.");
+          toppingAdds = 2;
+        }
+        else if (toppingAdds == 3)
+        {
+          toppingAdds = 3;
+        }
+        else if (toppingAdds == 4)
+        {
+          toppingAdds = 4;
+        }
+        else if (toppingAdds >= 5)
+        {
+          System.Console.WriteLine("you chose either 5 or more toppings. Defaulted to 5 toppings.");
+          toppingAdds = 5;
+        }
       }
       else
       {
-        System.Console.WriteLine("You did not enter a number for the amount of toppings.");
-        getNumberToppings();
+        System.Console.WriteLine("You did not enter a number for the amount of toppings");
+        return getNumberToppings(); //important note don't forget to return the values in recursion
       }
-
       return toppingAdds;
-
     }
     //change to a list 
     public static List<string> getToppingChoice(int toppingAdds)
     {
-      List<string> toppingList = new List<string>();
+      //System.Console.WriteLine(toppingAdds + "TOPPINGS");
+      List<string> toppingList = new List<string>(); // something is logically wrong 
+      //System.Console.WriteLine(toppingList.Capacity + "is the size");
       var toppingType1 = " ";
-      var toppingType2 = " ";
-      var toppingType3 = " ";
-      var toppingType4 = " ";
-      var toppingType5 = " ";
-      // one topping
-      /*if (toppingAdds == 1)
-      {
-        System.Console.WriteLine("Enter the type of topping you would like: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType1 = int.Parse(Console.ReadLine());
-        if (toppingType1 == 1)
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add(1);
-        }
-        else if (toppingType1 == 2)
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add(2);
-        }
-        else if (toppingType1 == 3)
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add(3);
-        }
-        else if (toppingType1 == 4)
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add(4);
-        }
-        else if (toppingType1 == 5)
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add(5);
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        return toppingList;
-      }*/
-      //two toppings
+
       if (toppingAdds == 2)
       {
-        System.Console.WriteLine("Enter the type of topping you would like for the first topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType1 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the second topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType2 = Console.ReadLine();
-        if (toppingType1.Equals("1"))
+        for (int i = 0; i < 2; i += 1)
         {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
+          if (i >= 2)
+          {
+            break;
+          }
+          System.Console.WriteLine("Enter the type of topping you would like: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
+          toppingType1 = Console.ReadLine();
+
+          if (toppingType1.Equals("1"))
+          {
+            System.Console.WriteLine("You chose pepporoni.");
+            toppingList.Add("pepporoni");
+          }
+          else if (toppingType1.Equals("2"))
+          {
+            System.Console.WriteLine("You chose saugsage.");
+            toppingList.Add("suasage");
+          }
+          else if (toppingType1.Equals("3"))
+          {
+            System.Console.WriteLine("You chose olives.");
+            toppingList.Add("olives");
+          }
+          else if (toppingType1.Equals("4"))
+          {
+            System.Console.WriteLine("You chose peppers.");
+            toppingList.Add("peppers");
+          }
+          else if (toppingType1.Equals("5"))
+          {
+            System.Console.WriteLine("You chose cheese");
+            toppingList.Add("cheese");
+          }
+          else
+          {
+            System.Console.WriteLine("You did not enter a number for the topping choice.");
+            i = i - 1;
+            //getToppingChoice(toppingAdds);
+          }
+
         }
-        else if (toppingType1.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType1.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType1.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType1.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the first topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check second topping
-        if (toppingType2.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType2.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType2.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType2.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType2.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the second topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        return toppingList;
       }
-      //three toppings
-      if (toppingAdds == 3)
+      else if (toppingAdds == 3)
       {
-        System.Console.WriteLine("Enter the type of topping you would like for the first topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType1 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the second topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType2 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the third topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType3 = Console.ReadLine();
-        if (toppingType1.Equals("1"))
+        for (int i = 0; i < 3; i += 1)
         {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
+          if (i >= 3)
+          {
+            break;
+          }
+          System.Console.WriteLine("Enter the type of topping you would like: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
+          toppingType1 = Console.ReadLine();
+
+          if (toppingType1.Equals("1"))
+          {
+            System.Console.WriteLine("You chose pepporoni.");
+            toppingList.Add("pepporoni");
+          }
+          else if (toppingType1.Equals("2"))
+          {
+            System.Console.WriteLine("You chose saugsage.");
+            toppingList.Add("suasage");
+          }
+          else if (toppingType1.Equals("3"))
+          {
+            System.Console.WriteLine("You chose olives.");
+            toppingList.Add("olives");
+          }
+          else if (toppingType1.Equals("4"))
+          {
+            System.Console.WriteLine("You chose peppers.");
+            toppingList.Add("peppers");
+          }
+          else if (toppingType1.Equals("5"))
+          {
+            System.Console.WriteLine("You chose cheese");
+            toppingList.Add("cheese");
+          }
+          else if (i > 3)
+          {
+            break;
+          }
+          else
+          {
+            System.Console.WriteLine("You did not enter a number for the topping choice.");
+            i = i - 1;
+            //getToppingChoice(toppingAdds);
+          }
         }
-        else if (toppingType1.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType1.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType1.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType1.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the first topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check second topping
-        if (toppingType2.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType2.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType2.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType2.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType2.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the second topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check third topping
-        if (toppingType3.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType3.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType3.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType3.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType3.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the third topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        return toppingList;
       }
-      // four toppings
-      if (toppingAdds == 4)
+      else if (toppingAdds == 4)
       {
-        System.Console.WriteLine("Enter the type of topping you would like for the first topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType1 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the second topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType2 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the third topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType3 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the fourth topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType4 = Console.ReadLine();
-        if (toppingType1.Equals("1"))
+        for (int i = 0; i < 4; i += 1)
         {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
+          if (i >= 4)
+          {
+            break;
+          }
+          System.Console.WriteLine("Enter the type of topping you would like: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
+          toppingType1 = Console.ReadLine();
+
+          if (toppingType1.Equals("1"))
+          {
+            System.Console.WriteLine("You chose pepporoni.");
+            toppingList.Add("pepporoni");
+          }
+          else if (toppingType1.Equals("2"))
+          {
+            System.Console.WriteLine("You chose saugsage.");
+            toppingList.Add("suasage");
+          }
+          else if (toppingType1.Equals("3"))
+          {
+            System.Console.WriteLine("You chose olives.");
+            toppingList.Add("olives");
+          }
+          else if (toppingType1.Equals("4"))
+          {
+            System.Console.WriteLine("You chose peppers.");
+            toppingList.Add("peppers");
+          }
+          else if (toppingType1.Equals("5"))
+          {
+            System.Console.WriteLine("You chose cheese");
+            toppingList.Add("cheese");
+          }
+          else
+          {
+            System.Console.WriteLine("You did not enter a number for the topping choice.");
+            i = i - 1;
+            //getToppingChoice(toppingAdds);
+          }
         }
-        else if (toppingType1.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType1.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType1.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType1.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the first topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check second topping
-        if (toppingType2.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType2.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType2.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType2.Equals("4"))
-        {
-          System.Console.WriteLine("You chose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType2.Equals("5"))
-        {
-          System.Console.WriteLine("You chose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the second topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check third topping
-        if (toppingType3.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType3.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType3.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType3.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType3.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the third topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        //check fourth topping 
-        if (toppingType4.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType4.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType4.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType4.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType4.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the fourth topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        return toppingList;
       }
-      //five toppings 
-      if (toppingAdds == 5)
+      else if (toppingAdds == 5)
       {
-        System.Console.WriteLine("Enter the type of topping you would like for the first topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType1 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the second topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType2 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the third topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType3 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the fourth topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType4 = Console.ReadLine();
-        System.Console.WriteLine("Enter the type of topping you would like for the fifth topping: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
-        toppingType5 = Console.ReadLine();
-        if (toppingType1.Equals("1"))
+        for (int i = 0; i < 5; i += 1)
         {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
+          if (i >= 5)
+          {
+            break;
+          }
+          System.Console.WriteLine("Enter the type of topping you would like: 1 for pepporoni, 2 for saugsage, 3 for olives, 4 for peppers, 5 for cheese");
+          toppingType1 = Console.ReadLine();
+
+          if (toppingType1.Equals("1"))
+          {
+            System.Console.WriteLine("You chose pepporoni.");
+            toppingList.Add("pepporoni");
+          }
+          else if (toppingType1.Equals("2"))
+          {
+            System.Console.WriteLine("You chose saugsage.");
+            toppingList.Add("suasage");
+          }
+          else if (toppingType1.Equals("3"))
+          {
+            System.Console.WriteLine("You chose olives.");
+            toppingList.Add("olives");
+          }
+          else if (toppingType1.Equals("4"))
+          {
+            System.Console.WriteLine("You chose peppers.");
+            toppingList.Add("peppers");
+          }
+          else if (toppingType1.Equals("5"))
+          {
+            System.Console.WriteLine("You chose cheese");
+            toppingList.Add("cheese");
+          }
+          else
+          {
+            System.Console.WriteLine("You did not enter a number for the topping choice.");
+            i = i - 1;
+            //getToppingChoice(toppingAdds);
+          }
         }
-        else if (toppingType1.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType1.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType1.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType1.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the first topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check second topping
-        if (toppingType2.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType2.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType2.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType2.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType2.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the second topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        // check third topping
-        if (toppingType3.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType3.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType3.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType3.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType3.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the third topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        //check fourth topping 
-        if (toppingType4.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType4.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType4.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType4.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType4.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the fourth topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        //check fifth topping 
-        if (toppingType5.Equals("1"))
-        {
-          System.Console.WriteLine("You chose pepporoni.");
-          toppingList.Add("pepporoni");
-        }
-        else if (toppingType5.Equals("2"))
-        {
-          System.Console.WriteLine("You chose saugsage.");
-          toppingList.Add("suasage");
-        }
-        else if (toppingType5.Equals("3"))
-        {
-          System.Console.WriteLine("You chose olives.");
-          toppingList.Add("olives");
-        }
-        else if (toppingType5.Equals("4"))
-        {
-          System.Console.WriteLine("You choose peppers.");
-          toppingList.Add("peppers");
-        }
-        else if (toppingType5.Equals("5"))
-        {
-          System.Console.WriteLine("You choose cheese.");
-          toppingList.Add("cheese");
-        }
-        else
-        {
-          System.Console.WriteLine("You did not enter a number for the fifth topping choice.");
-          getToppingChoice(toppingAdds);
-        }
-        return toppingList;
       }
       return toppingList;
     }
@@ -927,8 +596,9 @@ namespace PizzaBox.Client
     public static double getToppingPrice(List<string> toppingList)
     {
       List<double> PriceOfToppings = new List<double>();
-      string[] pricingArray = toppingList.ToArray();
       toppingList.Add(" ");
+      string[] pricingArray = toppingList.ToArray();
+
 
       string topping2 = " ";
       string topping3 = " ";
@@ -938,25 +608,25 @@ namespace PizzaBox.Client
 
       int numOfToppings = pricingArray.Length;
       //errors here toppings are accessed outside the array (check size with if else then assign otherwise index out of bounds error)
-      if (numOfToppings == 2)
+      if (numOfToppings == 3)
       {
         topping2 = pricingArray[0];
         topping3 = pricingArray[1];
-      }
-      else if (numOfToppings == 3)
-      {
-        topping2 = pricingArray[0];
-        topping3 = pricingArray[1];
-        topping4 = pricingArray[2];
       }
       else if (numOfToppings == 4)
       {
         topping2 = pricingArray[0];
         topping3 = pricingArray[1];
         topping4 = pricingArray[2];
-        topping5 = pricingArray[3];
       }
       else if (numOfToppings == 5)
+      {
+        topping2 = pricingArray[0];
+        topping3 = pricingArray[1];
+        topping4 = pricingArray[2];
+        topping5 = pricingArray[3];
+      }
+      else if (numOfToppings == 6)
       {
         topping2 = pricingArray[0];
         topping3 = pricingArray[1];
@@ -979,7 +649,7 @@ namespace PizzaBox.Client
       double toppingFivePriceAdd = 0.0;
 
 
-      if (numOfToppings == 2)
+      if (numOfToppings == 3)
       {
         if (topping2.Equals("pepporoni"))
         {
@@ -1024,7 +694,7 @@ namespace PizzaBox.Client
         }
       }
       // three toppings
-      if (numOfToppings == 3)
+      if (numOfToppings == 4)
       {
         if (topping2.Equals("pepporoni"))
         {
@@ -1091,7 +761,7 @@ namespace PizzaBox.Client
         }
       }
       // four toppings 
-      if (numOfToppings == 4)
+      if (numOfToppings == 5)
       {
         if (topping2.Equals("pepporoni"))
         {
@@ -1178,7 +848,7 @@ namespace PizzaBox.Client
         }
       }
       // five toppings 
-      if (numOfToppings == 5)
+      if (numOfToppings == 6)
       {
         if (topping2.Equals("pepporoni"))
         {
