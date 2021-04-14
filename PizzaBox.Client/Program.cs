@@ -115,7 +115,7 @@ namespace PizzaBox.Client
         {
           System.Console.WriteLine("You did not enter a correct input. Please enter y for yes or n for no for an order");
         }
-        System.Console.WriteLine($"You ordered {numberOfOrders} pizzas and the total is ${orderPriceLimit}");
+        System.Console.WriteLine($"You made {numberOfOrders} orders and the total is ${orderPriceLimit}");
       }
     }
 
